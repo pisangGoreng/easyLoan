@@ -6,3 +6,18 @@ export const loginRequestAction = (data) => {
     payload: data
   }
 }
+
+export const requestLogin = () => {
+  return {
+    type: ActionTypes.REQUEST_LOGIN,
+    payload: ''
+  }
+}
+
+export const failureLogin = () => {
+  return {
+    type: ActionTypes.FAILURE_LOGIN,
+    payload: ''
+  }
+}
+

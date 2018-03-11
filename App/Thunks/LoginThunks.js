@@ -1,9 +1,10 @@
 // import axios from 'axios'
 import api from '../Services/Api'
 import {Alert} from 'react-native'
+import firebase from 'react-native-firebase'
 
 // import Action Redux
-import { loginRequestAction } from '../Actions'
+import { loginRequestAction, requestLogin, failureLogin } from '../Actions'
 
 
 async function  nyoba () {
@@ -12,30 +13,28 @@ async function  nyoba () {
                           .then((response) => response.data)
                           .then((responseBody) => console.tron.log(responseBody))
                           .catch((error) => console.tron.log(error))
-  
-  console.tron.log(response)
   return response
-  
 }
 
 
-export const loginRequestThunk = (input) => {
-  // let response = await api.create()
-  //                         .validate()
-  //                         .then((response) => response.data)
-  //                         .then((responseBody) => responseBody)
-  //                         .catch((error) => error)
-  
-  // if (response !== null) {
-  //   console.tron.log(['response', response])
-  //   return dispatch => {dispatch(loginRequestAction(response))}
-  // } else {
-  //   console.tron.log(['error', response])
-  //   return dispatch => {dispatch(loginRequestAction(response))}
-  // }
-  nyoba()
-    // .then((response) => console.tron.log(['oko', response]))
-    // .catch(err => console.tron.log(err))
-  return dispatch => {dispatch(loginRequestAction('kucing'))}
+var ref = firebase.database().ref("/users")
+
+export const loginRequestThunk = (username, password) => {
+  return dispatch => {
+    dispatch(requestLogin())
+    ref
+    .orderByChild('username')
+    .equalTo(username)
+    .once('value')
+    .then(snapshot => {
+      let tempValue = snapshot.val()
+      let value = tempValue[0]
+      if (value !== null && value.username === username && value.username === password) {
+        dispatch(loginRequestAction(value))
+      } else {
+        dispatch(failureLogin())
+      }
+    })
+  }
 }
 

@@ -1,5 +1,7 @@
-import {loginRequestAction} from './LoginActions'
+import {loginRequestAction, requestLogin, failureLogin} from './LoginActions'
 
 export {
-  loginRequestAction
+  loginRequestAction,
+  requestLogin,
+  failureLogin
 }

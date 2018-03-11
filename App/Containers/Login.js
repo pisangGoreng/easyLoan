@@ -1,52 +1,84 @@
 // Import Library
 import React, { Component } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {View, Text, TouchableOpacity} from 'react-native'
+import {View, Text, TouchableOpacity, Alert} from 'react-native'
 import TextField from 'react-native-md-textinput'
 import { connect } from 'react-redux'
+import firebase from 'react-native-firebase'
+import Spinner from 'react-native-loading-spinner-overlay'
+import { Actions } from 'react-native-router-flux'
 
 import {Colors, FontSize} from '../Themes'
 import api from '../Services/Api'
 import { loginRequestThunk } from '../Thunks'
+import Styles from './Styles/LoginStyles'
 
 class Login extends Component {
-  componentDidMount () {
-    // let self = this
-    // async function  nyoba () {
-    //   let response = await api.create()
-    //                           .validate()
-    //                           .then((response) => response.data)
-    //                           .then((responseBody) => responseBody)
-    //                           .catch((error) => error)
-      
-    //   if (response !== null) {
-    //     self.props.loginRequestThunk(response)
-    //   } else {
-    //     Alert.alert('Sorry, problem with connection')
-    //     console.tron.log(['error', response])
-    //   }
-    // }
+  constructor (props) {
+    super(props)
+    this.state = {
+      username: '',
+      password: '',
+      isLoading: false
+    }
+  }
 
-    // nyoba()
-    this.props.loginRequestThunk('')
+  componentWillReceiveProps (newProps) {
+    const {isFetching, error} = newProps.login
+    this.toggleLoading()
+    if (isFetching === false && error === null) {
+      Actions.Home({type: 'reset'})
+    }
+  }
+
+  toggleLoading () {
+    const {isLoading} = this.state
+    this.setState({isLoading: !isLoading})
+  }
+
+  fetchLogin () {
+    const {username, password} = this.state
+    this.toggleLoading()
+    this.props.loginRequestThunk(username, password)
   }
 
   render () {
+    const {username, password, isLoading} = this.state
     return (
       <View style={{flex: 1}}>
         <KeyboardAwareScrollView contentContainerStyle={{backgroundColor: Colors.background, flex: 1}}>
-          <View style={{marginHorizontal: 20, marginTop: 100}}>
-            <Text style={{alignSelf: 'center', fontSize: FontSize.header}}>Welome</Text>
-            <TextField label={'Username'} highlightColor={Colors.greenBlue} />
-            <TextField label={'Password'} highlightColor={Colors.greenBlue} />
+        <Spinner visible={isLoading} textStyle={{color: '#FFF'}} />
+
+          <View style={Styles.TextInputContainer}>
+            <Text style={{alignSelf: 'center', fontSize: FontSize.header}}>Welcome</Text>
+            <TextField
+              label={'Username'}
+              ref='username'
+              highlightColor={Colors.greenBlue}
+              value={username}
+              onChangeText={(username) => this.setState({username})}
+              onSubmitEditing={() => this.refs.password.focus()}
+            />
+
+            <TextField
+              label={'Password'}
+              ref='password'
+              highlightColor={Colors.greenBlue}
+              value={password}
+              onChangeText={(password) => this.setState({password})}
+              onSubmitEditing={() => this.fetchLogin()}
+            />
           </View>
 
-          <View style={{marginHorizontal: 20, marginTop: 40}}>
-            <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.green, width: '100%', height: 40, borderRadius: 5, marginVertical: 10}}>
+          <View style={Styles.buttonContainer}>
+            <TouchableOpacity
+              onpRess={() => this.fetchLogin()}
+              style={Styles.registerButton}
+            >
               <Text style={{color: Colors.white}}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.green, width: '100%', height: 40, borderRadius: 5, marginVertical: 10}}>
+            <TouchableOpacity style={Styles.registerButton}>
               <Text style={{color: Colors.white}}>Register</Text>
             </TouchableOpacity>
           </View>
@@ -56,11 +88,17 @@ class Login extends Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    loginRequestThunk: (input) => dispatch(loginRequestThunk(input))
+    login: state.LoginReducers
   }
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginRequestThunk: (username, password) => dispatch(loginRequestThunk(username, password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
 
