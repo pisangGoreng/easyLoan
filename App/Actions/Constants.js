@@ -1,0 +1,3 @@
+// FOR LOGIN PAGE
+export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST'
+export const GET_DATA = 'GET_DATA'
