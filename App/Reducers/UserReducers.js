@@ -17,7 +17,7 @@ let initState = {
   goToScene: null
 }
 
-const LoginReducers = (state = initState, action) => {
+const UserReducers = (state = initState, action) => {
   switch (action.type) {
     case ActionTypes.USER_LOGIN_REQUEST: {
       return {...state, dataUser: action.payload.userData, isFetching: false, goToScene: action.payload.goToScene}
@@ -41,4 +41,4 @@ const LoginReducers = (state = initState, action) => {
   }
 }
 
-export default LoginReducers
+export default UserReducers
