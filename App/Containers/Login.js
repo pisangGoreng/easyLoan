@@ -10,24 +10,24 @@ import { Actions } from 'react-native-router-flux'
 
 import {Colors, FontSize} from '../Themes'
 import api from '../Services/Api'
-import { loginRequestThunk } from '../Thunks'
+import { loginRequestThunk, getAllLenderDataThunk } from '../Thunks'
 import Styles from './Styles/LoginStyles'
 
 class Login extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
+      username: 'b',
+      password: 'b',
       isLoading: false
     }
   }
 
   componentWillReceiveProps (newProps) {
-    const {isFetching, error} = newProps.login
-    this.toggleLoading()
-    if (isFetching === false && error === null) {
-      Actions.Home({type: 'reset'})
+    const {isFetching, error, dataUser, goToScene} = newProps.login
+    if (isFetching === false && error === null && goToScene === 'Home') {
+      this.toggleLoading()
+      Actions.Home()
     }
   }
 
@@ -39,7 +39,8 @@ class Login extends Component {
   fetchLogin () {
     const {username, password} = this.state
     this.toggleLoading()
-    this.props.loginRequestThunk(username, password)
+    this.props.loginRequestThunk(username, password, 'Home')
+    this.props.getAllLenderDataThunk()
   }
 
   render () {
@@ -72,7 +73,7 @@ class Login extends Component {
 
           <View style={Styles.buttonContainer}>
             <TouchableOpacity
-              onpRess={() => this.fetchLogin()}
+              onPress={() => this.fetchLogin()}
               style={Styles.registerButton}
             >
               <Text style={{color: Colors.white}}>Login</Text>
@@ -96,7 +97,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginRequestThunk: (username, password) => dispatch(loginRequestThunk(username, password))
+    loginRequestThunk: (username, password, goToScene) => dispatch(loginRequestThunk(username, password, goToScene)),
+    getAllLenderDataThunk: () => dispatch(getAllLenderDataThunk())
   }
 }
 

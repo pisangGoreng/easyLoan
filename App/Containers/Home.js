@@ -17,17 +17,51 @@ class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
-      isLoading: false
+      dataUser: this.props.login.dataUser
+    }
+  }
+
+  navigateToAccountScene () {
+    const {dataUser} = this.state
+    if (dataUser.role === 'lender') {
+      Actions.AccountLender()
+    }
+  }
+
+  navigateToTransactionScene () {
+    const {dataUser} = this.state
+    if (dataUser.role === 'lender') {
+      Actions.DepositLender()
+    } else {
+      Actions.DebtBorrower()
     }
   }
 
   render () {
-    const {username, password, isLoading} = this.state
+    const {dataUser} = this.state
+    const transactionType = dataUser.role === 'lender' ? 'Deposit' : 'Borrow'
     return (
-      <View>
-        <Text>ojk</Text>
+      <View style={{backgroundColor: Colors.background, flex: 1}}>
+        <View style={{flex: 1, backgroundColor: Colors.softGreen, justifyContent: 'flex-end', padding: 10}}>
+          <Text style={{fontSize: 20, color: Colors.white}}>EasyLoan</Text>
+          <Text style={{fontSize: 12, color: Colors.white}}>Mudah pinjam nya, tanpa perlu dibayar</Text>
+        </View>
+
+        <TouchableOpacity
+          style={{flex: 2, backgroundColor: Colors.softBlue, justifyContent: 'flex-end', padding: 10}}
+          onPress={() => this.navigateToTransactionScene()}
+        >
+          <Text style={{fontSize: 20, color: Colors.white}}>{transactionType}</Text>
+          <Text style={{fontSize: 12, color: Colors.white}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quae sunt dignissimos, ipsum veritatis assumenda.</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{flex: 2, backgroundColor: Colors.softYellow, justifyContent: 'flex-end', padding: 10}}
+          onPress={() => this.navigateToAccountScene()}
+        >
+          <Text style={{fontSize: 20, color: Colors.white}}>Account</Text>
+          <Text style={{fontSize: 12, color: Colors.white}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quae sunt dignissimos, ipsum veritatis assumenda.</Text>
+        </TouchableOpacity>
       </View>
       )
     }

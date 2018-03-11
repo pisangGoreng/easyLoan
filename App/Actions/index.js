@@ -1,7 +1,8 @@
-import {loginRequestAction, requestLogin, failureLogin} from './LoginActions'
+import {loginRequestAction, requestLogin, failureLogin, fetchAllLenderData} from './LoginActions'
 
 export {
   loginRequestAction,
   requestLogin,
-  failureLogin
+  failureLogin,
+  fetchAllLenderData
 }

@@ -1,5 +1,8 @@
-import {loginRequestThunk} from './LoginThunks'
+import {loginRequestThunk, closedTransactionThunk, addDepositThunk, getAllLenderDataThunk} from './LoginThunks'
 
 export {
-  loginRequestThunk
+  loginRequestThunk,
+  closedTransactionThunk,
+  addDepositThunk,
+  getAllLenderDataThunk
 }
