@@ -1,0 +1,71 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "a",
+      "password": "a",
+      "name": "endy",
+      "balance": 1000000,
+      "totalBorrower": 0,
+      "debt": 0,
+      "profit": 90000,
+      "transactionAsLender": [
+        {
+          "id": 1,
+          "userId": 2,
+          "duration": 3,
+          "amount": 500000,
+          "profit": 60000,
+          "finished": false,
+          "startMonth": 12, 
+          "endMonth": 3
+        },
+        {
+          "id": 2,
+          "userId": 2,
+          "duration": 3,
+          "amount": 500000,
+          "profit": 30000,
+          "finished": false,
+          "startMonth": 3, 
+          "endMonth": 6
+        }
+      ],
+      "transactionAsBorrower": [],
+      "role": "lender"
+    },
+    {
+      "id": 2,
+      "username": "b",
+      "password": "b",
+      "name": "irsan",
+      "balance": 0,
+      "totalBorrower": 500000,
+      "debt": 90000,
+      "profit": 0,
+      "transactionAsBorrower": [
+        {
+          "id": 1,
+          "userId": 1,
+          "duration": 3,
+          "amount": 500000,
+          "profit": 30000,
+          "finished": false,
+          "startMonth": 3, 
+          "endMonth": 6
+        },
+        {
+          "id": 2,
+          "userId": 1,
+          "duration": 6,
+          "amount": 500000,
+          "profit": 60000,
+          "finished": false,
+          "startMonth": 3, 
+          "endMonth": 9
+        }
+      ],
+      "role": "borrower"
+    }
+  ]
+}
