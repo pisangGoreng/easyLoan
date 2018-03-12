@@ -6,6 +6,7 @@ import {BackHandler} from 'react-native'
 import Login from './Login'
 import Home from './Home'
 import AccountLender from './AccountLender'
+import AccountBorrower from './AccountBorrower'
 import DepositLender from './DepositLender'
 import DebtBorrower from './DebtBorrower'
 
@@ -17,6 +18,7 @@ class RootContainer extends Component {
             <Scene key='Login' component={Login} title='Login' panHandlers={null} initial />
             <Scene key='Home' component={Home} title='Home' panHandlers={null} />
             <Scene key='AccountLender' component={AccountLender} title='AccountLender' panHandlers={null} />
+            <Scene key='AccountBorrower' component={AccountBorrower} title='AccountBorrower' panHandlers={null} />
             <Scene key='DepositLender' component={DepositLender} title='DepositLender' panHandlers={null} />
             <Scene key='DebtBorrower' component={DebtBorrower} title='DebtBorrower' panHandlers={null} />
         </Scene>

@@ -1,7 +1,7 @@
 // Import Library
 import React, { Component } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {View, Text, TouchableOpacity, Alert} from 'react-native'
+import {View, Text, TouchableOpacity, Alert, BackHandler} from 'react-native'
 import TextField from 'react-native-md-textinput'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
@@ -22,6 +22,19 @@ class DepositLender extends Component {
       dataUser: this.props.login.dataUser,
       depositAmount: 0
     }
+  }
+
+  componentDidMount () {
+    BackHandler.addEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  componentWillUnmount () {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  backAndroid () {
+    Actions.Home({type: 'reset'})
+    return true
   }
 
   addDeposit () {

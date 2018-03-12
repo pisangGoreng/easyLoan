@@ -1,7 +1,7 @@
 // Import Library
 import React, { Component } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {View, Text, TouchableOpacity, Alert} from 'react-native'
+import {View, Text, TouchableOpacity, Alert, BackHandler} from 'react-native'
 import TextField from 'react-native-md-textinput'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
@@ -21,10 +21,25 @@ class Home extends Component {
     }
   }
 
+  componentDidMount () {
+    BackHandler.addEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  componentWillUnmount () {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  backAndroid () {
+    BackHandler.exitApp()
+    return true
+  }
+
   navigateToAccountScene () {
     const {dataUser} = this.state
     if (dataUser.role === 'lender') {
       Actions.AccountLender()
+    } else {
+      Actions.AccountBorrower()
     }
   }
 

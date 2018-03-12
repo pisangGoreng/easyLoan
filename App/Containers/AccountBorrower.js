@@ -21,20 +21,20 @@ const SECTIONS = [
 ]
 
 
-class AccountLender extends Component {
+class AccountBorrower extends Component {
   constructor (props) {
     super(props)
     this.state = {
       dataUser: this.props.login.dataUser,
-      estimatedProfit: 0,
-      totalMoneyLended: 0
+      estimatedDebt: 0,
+      totalMoneyBorrower: 0
     }
   }
 
   componentWillReceiveProps (newProps) {
     const {goToScene} = newProps.login
     if (goToScene === 'AccountLender') {
-      Actions.AccountLender({type: 'reset'})
+      Actions.AccountBorrower({type: 'reset'})
     }
   }
 
@@ -45,15 +45,18 @@ class AccountLender extends Component {
 
   calculateTransaction () {
     const {dataUser} = this.state
-    let estimatedProfit = 0
-    let totalMoneyLended = 0
-    dataUser.transactionAsLender.map(transaction => {
+    let estimatedDebt = 0
+    let totalMoneyBorrower = 0
+    dataUser.transactionAsBorrower.map(transaction => {
       if (transaction.finished === false) {
-        estimatedProfit = Number(estimatedProfit) + Number(transaction.profit)
-        totalMoneyLended = Number(totalMoneyLended) + Number(transaction.amount)
+        estimatedDebt = Number(estimatedDebt) + Number(transaction.profit)
+        totalMoneyBorrower = Number(totalMoneyBorrower) + Number(transaction.amount)
+
+        console.tron.log(['estimatedDebt', estimatedDebt])
+        console.tron.log(['totalMoneyBorrower', totalMoneyBorrower])
       }
     })
-    this.setState({estimatedProfit, totalMoneyLended})
+    this.setState({estimatedDebt, totalMoneyBorrower})
   }
 
   _renderHeader(title) {
@@ -96,15 +99,9 @@ class AccountLender extends Component {
           ? (data.map((transaction, index) => {
               return transaction.finished === false && this.renderTransactionDetail(transaction, index)
             }))
-          : status === 'closed' 
-            ? (data.map((transaction, index) => {
+          : (data.map((transaction, index) => {
                 return transaction.finished === true && this.renderTransactionDetail(transaction, index)
-              }))
-            : (data.map((transaction, index) => {
-                if (transaction.finished === false && transaction.endMonth === LocaleFormatter.getTodayMonth()) {
-                  return this.renderTransactionDetail(transaction, index, 'showClosedButton')
-                }
-              }))
+            }))
         }
       </View>
     );
@@ -137,17 +134,6 @@ class AccountLender extends Component {
             <Text style={{fontSize: 10}}>{transaction.duration} Month</Text>
           </View>
         </View>
-        
-        {
-          showClosedButton &&
-            <TouchableOpacity
-              onPress={() => this.closedTransaction(transaction)}
-              style={{justifyContent: 'center', alignItems: 'center', height: 40, borderWidth: 0.3}}
-            >
-              <Text>Close this transaction...</Text>
-            </TouchableOpacity>
-        }
-
       </View>
     )
   }
@@ -158,8 +144,8 @@ class AccountLender extends Component {
   }
 
   render () {
-    const {dataUser, estimatedProfit, totalMoneyLended} = this.state
-    console.tron.log(dataUser.transactionAsLender)
+    const {dataUser, estimatedDebt, totalMoneyBorrower} = this.state
+    console.tron.log(this.state)
     return (
       <View style={{backgroundColor: Colors.softYellow, flex: 1}}>
         <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
@@ -167,30 +153,22 @@ class AccountLender extends Component {
             <Text>Hi.. {dataUser.name}</Text>
 
             <Text>Right now you have:</Text>
-            <Text>Balance:{LocaleFormatter.numberToCurrency(dataUser.balance)}</Text>
-            <Text>Total Money Lended:{LocaleFormatter.numberToCurrency(totalMoneyLended)}</Text>
-            <Text>Estimated Profit:{LocaleFormatter.numberToCurrency(estimatedProfit)}</Text>
+            <Text>Total Money Borrower:{LocaleFormatter.numberToCurrency(totalMoneyBorrower)}</Text>
+            <Text>Estimated Debt:{LocaleFormatter.numberToCurrency(estimatedDebt)}</Text>
 
             <Text>Transaction Detail:</Text>
             <Accordion
               sections={SECTIONS}
               underlayColor={'white'}
               renderHeader={() =>this. _renderHeader('Open Transaction')}
-              renderContent={() => this._renderContent(dataUser.transactionAsLender, 'open')}
+              renderContent={() => this._renderContent(dataUser.transactionAsBorrower, 'open')}
             />
 
             <Accordion
               sections={SECTIONS}
               underlayColor={'white'}
               renderHeader={() =>this. _renderHeader('Closed Transaction')}
-              renderContent={() => this._renderContent(dataUser.transactionAsLender, 'closed')}
-            />
-
-            <Accordion
-              sections={SECTIONS}
-              underlayColor={'white'}
-              renderHeader={() =>this. _renderHeader('Finished Transaction')}
-              renderContent={() => this._renderContent(dataUser.transactionAsLender, 'finished')}
+              renderContent={() => this._renderContent(dataUser.transactionAsBorrower, 'closed')}
             />
 
             <TouchableOpacity
@@ -218,5 +196,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountLender)
+export default connect(mapStateToProps, mapDispatchToProps)(AccountBorrower)
 

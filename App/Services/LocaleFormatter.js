@@ -88,8 +88,20 @@ const getTodayMonth = (number) => {
   return n
 }
 
+const calculateEndMonth = (startMonth, perriod) => {
+  let totalMonth = startMonth + perriod
+  if (startMonth + perriod >= 12) {
+    let monthInNextYear = totalMonth - 12
+    return monthInNextYear
+  }
+  
+  return totalMonth
+}
+
+
 export default {
   numberToCurrency,
   getMonth,
-  getTodayMonth
+  getTodayMonth,
+  calculateEndMonth
 }

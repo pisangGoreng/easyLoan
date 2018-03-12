@@ -1,7 +1,7 @@
 // Import Library
 import React, { Component } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {View, Text, TouchableOpacity, Alert} from 'react-native'
+import {View, Text, TouchableOpacity, Alert, BackHandler} from 'react-native'
 import TextField from 'react-native-md-textinput'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
@@ -11,7 +11,7 @@ import { Dropdown } from 'react-native-material-dropdown'
 
 import {Colors, FontSize} from '../Themes'
 import api from '../Services/Api'
-import { addDepositThunk } from '../Thunks'
+import { requestBorrowerThunk } from '../Thunks'
 import Styles from './Styles/LoginStyles'
 import LocaleFormatter from '../Services/LocaleFormatter'
 
@@ -27,15 +27,26 @@ class DebtBorrower extends Component {
     }
   }
 
+  componentDidMount () {
+    BackHandler.addEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  componentWillUnmount () {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.backAndroid())
+  }
+
+  backAndroid () {
+    Actions.Home({type: 'reset'})
+    return true
+  }
+
   borrowMoney () {
-    const {dataUser, borrowerAmount} = this.state
-    this.props.addDepositThunk(dataUser, borrowerAmount, 'AccountLender')
+    const {dataUser, borrowerAmount, perriodTime, dataLender, chooseLender} = this.state
+    this.props.requestBorrowerThunk(dataUser, borrowerAmount, perriodTime, dataLender[chooseLender])
   }
 
   render () {
     const {dataUser, borrowerAmount, dataLender} = this.state
-    console.tron.log(this.state)
-
     let perriod = [{
       value: 3,
     }, {
@@ -76,7 +87,7 @@ class DebtBorrower extends Component {
               <Dropdown
                 label='Lender'
                 data={lender}
-                onChangeText={(value, index, data) => this.setState({chooseLender: dataLender[index]}) }
+                onChangeText={(value, index, data) => this.setState({chooseLender: index}) }
               />
             </View>
 
@@ -100,7 +111,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDepositThunk: (dataUser, borrowerAmount, goToScene) => dispatch(addDepositThunk(dataUser, borrowerAmount, goToScene))
+    // addDepositThunk: (dataUser, borrowerAmount, goToScene) => dispatch(addDepositThunk(dataUser, borrowerAmount, goToScene))
+    requestBorrowerThunk: (dataUser, borrowerAmount, perriodTime, dataLender) => dispatch(requestBorrowerThunk(dataUser, borrowerAmount, perriodTime, dataLender))
   }
 }
 
